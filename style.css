@@ -1,16 +1,17 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #e9ecef;
     text-align: center;
     padding-top: 50px;
 }
 
 .game-container {
     background-color: #fff;
-    border: 2px solid #000;
+    border: 2px solid #007bff;
+    border-radius: 10px;
     padding: 20px;
     display: inline-block;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
 }
 
 button {
@@ -18,10 +19,15 @@ button {
     margin: 10px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #008cba;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
 
 button:disabled {
@@ -36,4 +42,9 @@ footer {
 #game-image {
     width: 200px;
     margin-top: 20px;
+    transition: opacity 0.5s;
+}
+
+.hidden {
+    opacity: 0;
 }
