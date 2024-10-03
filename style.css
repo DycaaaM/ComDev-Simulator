@@ -32,3 +32,8 @@ button:disabled {
 footer {
     margin-top: 50px;
 }
+
+#game-image {
+    width: 200px;
+    margin-top: 20px;
+}
