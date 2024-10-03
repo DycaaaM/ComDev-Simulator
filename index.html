@@ -9,11 +9,13 @@
 <body>
     <div class="game-container">
         <h1>GemDev Simulator</h1>
-        <p id="version">Version: 1.1</p>
+        <p id="version">Version: 1.2</p>
         <p id="game-progress">Progress: 0%</p>
         <p id="experience">Experience: 0</p>
         <p id="level">Level: 1</p>
+        <p id="money">Money: $0</p>
         <p id="challenge">Daily Challenge: Develop a Puzzle game!</p>
+        
         <label for="genre">Choose a genre:</label>
         <select id="genre">
             <option value="Platformer">Platformer</option>
@@ -21,23 +23,32 @@
             <option value="RPG">RPG</option>
             <option value="Shooter">Shooter</option>
         </select>
-        
+
         <label for="difficulty">Choose Difficulty:</label>
         <select id="difficulty">
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
+            <option value="Insane">Insane</option>
+        </select>
+
+        <label for="character">Choose Character:</label>
+        <select id="character">
+            <option value="Developer">Developer</option>
+            <option value="Designer">Designer</option>
+            <option value="Artist">Artist</option>
         </select>
 
         <button id="start-btn">Start Development</button>
         <button id="fix-bugs" disabled>Fix Bugs</button>
         <button id="launch-game" disabled>Launch Game</button>
         <button id="toggle-music">Play Music</button>
-        
+
         <div id="message"></div>
         <img id="game-image" src="" alt="" style="display:none;">
+        <div id="loading" class="hidden">Loading...</div>
         
-        <div id="character" class="character"></div>
+        <div id="character-display" class="character"></div>
     </div>
     <footer>
         <p>By Dyca M</p>

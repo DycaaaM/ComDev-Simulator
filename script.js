@@ -2,10 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let progress = 0;
     let experience = 0;
     let level = 1;
+    let money = 0;
     let musicPlaying = false;
     
     // Versi game
-    const version = "1.1";
+    const version = "1.2";
     document.getElementById("version").innerText = `Version: ${version}`;
 
     const startButton = document.getElementById("start-btn");
@@ -16,10 +17,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const progressText = document.getElementById("game-progress");
     const experienceText = document.getElementById("experience");
     const levelText = document.getElementById("level");
+    const moneyText = document.getElementById("money");
     const genreSelect = document.getElementById("genre");
     const difficultySelect = document.getElementById("difficulty");
+    const characterSelect = document.getElementById("character");
     const gameImage = document.getElementById("game-image");
-    const character = document.getElementById("character");
+    const characterDisplay = document.getElementById("character-display");
+    const loadingDiv = document.getElementById("loading");
 
     // Musik latar
     const backgroundMusic = new Audio('background-music.mp3'); // Pastikan untuk menambahkan file musik
@@ -39,6 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
             levelText.innerText = `Level: ${level}`;
             messageBox.innerText += `\nCongratulations! You've reached Level ${level}!`;
         }
+    }
+
+    // Function to update money
+    function updateMoney(amount) {
+        money += amount;
+        moneyText.innerText = `Money: $${money}`;
     }
 
     // Function to set game image based on genre
@@ -61,42 +71,66 @@ document.addEventListener('DOMContentLoaded', function () {
     startButton.addEventListener("click", function () {
         const genre = genreSelect.value;
         const difficulty = difficultySelect.value;
+        const character = characterSelect.value;
         
         let baseProgress = 50;
         updateExperience(10); // Dapatkan 10 XP saat memulai
+        updateMoney(5); // Dapatkan $5 saat memulai
 
         if (difficulty === "Easy") {
             baseProgress += 20; // Easy adds 20% to progress
         } else if (difficulty === "Hard") {
             baseProgress -= 20; // Hard subtracts 20% from progress
+        } else if (difficulty === "Insane") {
+            baseProgress -= 40; // Insane subtracts 40% from progress
         }
 
         progress = baseProgress;
-        messageBox.innerText = `You have started coding a ${genre} game! Difficulty: ${difficulty}`;
+        messageBox.innerText = `You have started coding a ${genre} game as a ${character}! Difficulty: ${difficulty}`;
         setGameImage(genre);
         updateProgress();
         fixBugsButton.disabled = false;
+
+        // Tampilkan karakter yang dipilih
+        characterDisplay.style.backgroundColor = character === "Developer" ? "blue" :
+                                                 character === "Designer" ? "purple": "green";
+
+        // Animasi loading sebelum melanjutkan ke sesi "Fix Bugs"
+        loadingDiv.style.display = 'block';
+        setTimeout(() => {
+            loadingDiv.style.display = 'none';
+            fixBugsButton.disabled = false;
+            messageBox.innerText += `\nReady to fix bugs!`;
+        }, 2000); // Menunggu 2 detik sebelum menampilkan sesi Fix Bugs
     });
 
     // Fix bugs button click
     fixBugsButton.addEventListener("click", function () {
-        messageBox.innerText = "Fixing bugs...";
-        progress = 80;
+        const bugFixes = Math.floor(Math.random() * 5) + 1; // Menghasilkan antara 1-5 bug yang diperbaiki
+        updateExperience(bugFixes * 10); // Dapatkan 10 XP untuk setiap bug yang diperbaiki
+        updateMoney(bugFixes * 10); // Dapatkan $10 untuk setiap bug yang diperbaiki
+        progress += bugFixes * 10; // Setiap bug yang diperbaiki menambah progress
         updateProgress();
-        launchGameButton.disabled = false;
-        updateExperience(20); // Dapatkan 20 XP saat memperbaiki bug
+        messageBox.innerText += `\nYou have fixed ${bugFixes} bugs!`;
+        
+        // Jika progress >= 100, siap untuk diluncurkan
+        if (progress >= 100) {
+            progress = 100;
+            messageBox.innerText += `\nCongratulations! Your game is ready to be launched!`;
+            launchGameButton.disabled = false; // Mengaktifkan tombol Launch Game
+        }
     });
 
     // Launch game button click
     launchGameButton.addEventListener("click", function () {
-        messageBox.innerText = `Your ${genreSelect.value} game is ready to launch!`;
-        progress = 100;
-        updateProgress();
-        launchGameButton.disabled = true;
-        // Display game statistics
+        messageBox.innerText += `\nLaunching your game...`;
+        // Animasi loading saat meluncurkan game
+        loadingDiv.style.display = 'block';
         setTimeout(() => {
-            alert(`Congratulations! You developed a ${genreSelect.value} game with 100% progress!`);
-        }, 500);
+            loadingDiv.style.display = 'none';
+            messageBox.innerText += `\nYour game has been launched successfully!`;
+            resetGame();
+        }, 3000); // Menunggu 3 detik sebelum menyetel ulang game
     });
 
     // Toggle music button click
@@ -111,36 +145,20 @@ document.addEventListener('DOMContentLoaded', function () {
         musicPlaying = !musicPlaying;
     });
 
-    // Gerakan karakter
-    document.addEventListener('keydown', function (event) {
-        const characterStyle = window.getComputedStyle(character);
-        let left = parseInt(characterStyle.left);
-        let bottom = parseInt(characterStyle.bottom);
-
-        switch (event.key) {
-            case 'ArrowLeft':
-                if (left > 0) {
-                    left -= 10; // Gerakkan ke kiri
-                }
-                break;
-            case 'ArrowRight':
-                if (left < (window.innerWidth - 70)) { // Pastikan tidak keluar layar
-                    left += 10; // Gerakkan ke kanan
-                }
-                break;
-            case 'ArrowUp':
-                if (bottom < (window.innerHeight - 70)) { // Pastikan tidak keluar layar
-                    bottom += 10; // Gerakkan ke atas
-                }
-                break;
-            case 'ArrowDown':
-                if (bottom > 0) {
-                    bottom -= 10; // Gerakkan ke bawah
-                }
-                break;
-        }
-
-        character.style.left = `${left}px`;
-        character.style.bottom = `${bottom}px`;
-    });
+    // Reset game function
+    function resetGame() {
+        progress = 0;
+        experience = 0;
+        level = 1;
+        money = 0;
+        updateProgress();
+        experienceText.innerText = `Experience: 0`;
+        levelText.innerText = `Level: 1`;
+        moneyText.innerText = `Money: $0`;
+        launchGameButton.disabled = true; // Menonaktifkan tombol setelah peluncuran
+        fixBugsButton.disabled = true; // Menonaktifkan tombol Fix Bugs
+        messageBox.innerText = ""; // Mengosongkan pesan
+        characterDisplay.style.backgroundColor = "transparent"; // Menghapus karakter
+        gameImage.style.display = 'none'; // Menyembunyikan gambar game
+    }
 });
